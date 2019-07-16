@@ -52,16 +52,18 @@ Window {
         onIsFullScreenChanged: window.setFullscreen(window.currentWebview.isFullScreen)
     }
 
+    onVisibilityChanged: {
+        if (!window.forceFullscreen) {
+          if (window.visibility !== internal.currentWindowState) {
+              window.visibility = internal.currentWindowState;
+          }
+        }
+    }
+
     function setFullscreen(fullscreen) {
         if (!window.forceFullscreen) {
-            if (fullscreen) {
-                if (window.visibility != Window.FullScreen) {
-                    internal.currentWindowState = window.visibility
-                    window.visibility = Window.FullScreen
-                }
-            } else {
-                window.visibility = internal.currentWindowState
-            }
+            internal.currentWindowState = fullscreen ? Window.FullScreen : Window.Windowed;
+            window.visibility = internal.currentWindowState;
         }
     }
 }
