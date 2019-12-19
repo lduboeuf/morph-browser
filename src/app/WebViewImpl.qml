@@ -198,7 +198,7 @@ WebView {
                 var dialog;
                 if (request.message==='XX-MORPH-SELECT-OVERRIDE-XX') {
                     dialog = PopupUtils.open(Qt.resolvedUrl("SelectOverrideDialog.qml"), this);
-                    dialog.options = request.defaultText;
+                    dialog.data = request.defaultText;
                 }else{
                     dialog = PopupUtils.open(Qt.resolvedUrl("PromptDialog.qml"), this);
                     dialog.defaultValue = request.defaultText;
