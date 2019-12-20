@@ -17,6 +17,7 @@
  */
 
 import QtQuick 2.7
+import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.3
 import Ubuntu.Components.ListItems 1.3 as ListItem
 import Ubuntu.Components.Popups 1.3 as Popups
@@ -41,73 +42,67 @@ Popups.Dialog {
     onAccept: hide()
     onReject: hide()
 
+    function handleSelection(selectIndex) {
+        if (!isMultipleSelect) {
+            selection.push(selectIndex)
+            accept(JSON.stringify(selection))
+        }else{
+
+            var idx = selection.indexOf(selectIndex);
+            if (idx === -1){
+                selection.push(selectIndex);
+            }else{
+                selection.splice(idx, 1);
+            }
+            console.log(selection)
+        }
+    }
 
 
     Column {
         anchors.left: parent.left
         anchors.right: parent.right
-        spacing: units.gu(3)
+        spacing: units.gu(2)
 
+        Repeater {
+            id: listView
 
-        ListItem.ItemSelector {
             model: selectOverlay.selectOptions
-            expanded: true
-            multiSelection: isMultipleSelect
-            //selectedIndex: -1
-            showDivider: true
-            //containerHeight: itemHeight * 4
-            delegate: OptionSelectorDelegate {
+            //contentHeight: contentItem.childrenRect.height
+            delegate:  ListItem.Standard  {
+                id: item
                 text: modelData
-                selected: selection.indexOf(index) > -1
-            }
-            onDelegateClicked: {
+                width: parent.width
+                highlightWhenPressed: false
+                showDivider: true
+                height: units.gu(5)
 
-                if (!isMultipleSelect) {
-                    selection.push(index)
-                    accept(JSON.stringify(selection))
-                }else{
-
-                    var idx = selection.indexOf(index);
-                    if (idx === -1){
-                        console.log("add index", index)
-                        selection.push(index);
-                    }else{
-                        console.log("remove index", index)
-                        selection.splice(idx, 1);
-                    }
-                    console.log(selection)
-
+                control: CheckBox {
+                    visible: isMultipleSelect
+                    checked: item.selected
+                    //checked:selection.indexOf(index) > -1
                 }
 
+                onClicked: {
+                    if (!isMultipleSelect) {
+                        selection.push(index)
+                        accept(JSON.stringify(selection))
+                    }else{
+
+                        var idx = selection.indexOf(index);
+                        if (idx === -1){
+                            selection.push(index);
+                            selected = true
+                        }else{
+                            selection.splice(idx, 1);
+                            selected = false
+                        }
+
+                        console.log(selection)
+                    }
+                }
             }
-            Component.onCompleted : selectedIndex = -1
-
-            //        Label {
-            //            anchors {
-            //                left: parent.left
-            //                leftMargin: units.gu(2)
-            //                right: checkbox.left
-            //                rightMargin: units.gu(2)
-            //                verticalCenter: parent.verticalCenter
-            //            }
-            //            text: modelData
-            //        }
-
-            //        CheckBox {
-            //            id: checkbox
-            //            visible: isMultipleSelect
-            //            checked: selection.indexOf(index) > -1
-            //            anchors {
-            //                verticalCenter: parent.verticalCenter
-            //                right: parent.right
-            //            }
-
-            //}
-
-
-            //onTriggered: handleSelection(index, checkbox.checked)
         }
-
 
 
 

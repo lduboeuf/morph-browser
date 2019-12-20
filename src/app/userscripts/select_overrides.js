@@ -9,7 +9,8 @@ take a list of select options, pass it to a window.prompt so that it can be hand
 
         var datas = { multiple: select.multiple };
         var opts = [];
-        for (var i = 0; i < select.options.length; i++) {
+        var i = 0
+        for (i; i < select.options.length; i++) {
             opts.push(select.options[i].innerText);
         }
         datas.options = opts;
@@ -32,7 +33,7 @@ take a list of select options, pass it to a window.prompt so that it can be hand
     }
 
     //listen to mousedown events and see if it comes from a SELECT tag
-    window.addEventListener('mousedown', function(evt) {
+    document.addEventListener('mousedown', function(evt) {
         var target = null;
         if (evt.target.tagName === 'SELECT') { //normal case
             target = evt.target;
